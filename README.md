@@ -1,1 +1,2 @@
-# iot_garbage_monitoring_system
+This project implements a Smart Dustbin Monitoring System using an Ultrasonic Distance Sensor and an I2C LCD with an Arduino. The system continuously measures the fill level of a dustbin by calculating the distance from the sensor to the trash level. Based on the distance, it calculates the fill percentage and displays the real-time status on a 16x2 LCD screen. When the bin is full (≥100% fill level), a “FULL!” alert is shown to prompt timely disposal. This setup is ideal for smart waste management applications to reduce manual checking and improve efficiency.
+
