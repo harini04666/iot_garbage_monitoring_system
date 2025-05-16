@@ -1,0 +1,62 @@
+#include <LiquidCrystal_I2C.h>
+
+// Try 0x27 or 0x3F depending on your I2C LCD address
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// Ultrasonic sensor pins
+const int trigPin = 9;
+const int echoPin = 10;
+
+// Distance thresholds
+const int maxDistance = 30; // Empty bin
+const int minDistance = 5;  // Full bin
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  lcd.init();         // Initialize LCD
+  lcd.backlight();    // Turn on backlight
+
+  lcd.setCursor(0, 0);
+  lcd.print(" Dustbin Monitor ");
+  delay(2000);
+  lcd.clear();
+}
+
+void loop() {
+  long duration;
+  float distance;
+
+  // Trigger the ultrasonic sensor
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Read the echo
+  duration = pulseIn(echoPin, HIGH);
+  distance = duration * 0.034 / 2;
+
+  // Compute fill percentage
+  float fillPercent = ((maxDistance - distance) / (maxDistance - minDistance)) * 100;
+  fillPercent = constrain(fillPercent, 0, 100);
+
+  // Display values on LCD
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Dustbin Level:");
+
+  lcd.setCursor(0, 1);
+  lcd.print((int)fillPercent);
+  lcd.print("%");
+
+  // If full, show "FULL!" text
+  if (fillPercent >= 100) {
+    lcd.setCursor(9, 1);
+    lcd.print("FULL!");
+  }
+
+  delay(1000); // Refresh every 1 second
+}
